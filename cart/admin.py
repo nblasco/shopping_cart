@@ -6,8 +6,8 @@ from .models import Item, Cart
 class ItemAdmin(admin.ModelAdmin):
     """ Custom Item inside admin"""
 
-    list_display = ['id','name','price']
-    ordering = ['id', 'date_created','name']
+    list_display = ['id', 'name', 'price', 'image']
+    ordering = ['id', 'date_created', 'name']
 
 admin.site.register(Item, ItemAdmin)
 
