@@ -164,3 +164,44 @@ class ItemTest(TestCase):
         count_items = self.client.session['count_items']
 
         self.assertEqual(count_items, 1)
+
+class CartDetailTest(TestCase):
+    """ Test view of detail cart """
+
+    fixtures = ['cart/fixtures/item.json', 'cart/fixtures/user.json', ]
+
+    def setUp(self):
+        """ Set values default for test """
+
+        self.item = Item.objects.get(id=1)
+        self.user = User.objects.get(id=2)
+
+        self.factory = RequestFactory()
+
+    def test_anonymous_cart_detail(self):
+        """ """
+
+        session = self.client.session
+        session['count_items'] = 1
+        session['cart'] = '{"items":[1]}'
+        session.save()
+
+        response = self.client.get(reverse('cart_detail'))
+
+        self.assertEqual(response.status_code,200)
+        self.assertEqual(len(response.context['items']), 1)
+        self.assertEqual(response.context['total'], self.item.price)
+
+    def test_user_cart_detail(self):
+
+        self.cart = Cart.objects.create(user=self.user)
+        self.cart.items.add(self.item)
+        self.cart.set_total()
+        self.cart.save()
+        self.client.login(username='norma', password='n_123456')
+
+        response = self.client.get(reverse('cart_detail'))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.context['items']), 1)
+        self.assertEqual(response.context['total'], self.item.price)
