@@ -30,6 +30,11 @@ urlpatterns = [
         name='cart_pay_method'
     ),
     url(
+        regex=r'^delete/(?P<item_id>\d+)/$',
+        view=views.delete_item_cart,
+        name='cart_remove_item'
+    ),
+    url(
         regex=r'^login/$',
         view=auth_views.LoginView.as_view(),
         name='login'

@@ -137,6 +137,50 @@ def pay_method_cart(request):
     return HttpResponseRedirect(reverse_lazy('item_list'))
 
 
+def delete_item_cart(request, item_id):
+    """ This view removes an item from the shopping cart
+
+    If you are an anonymous user, just delete the session item
+    If you are logged in, remove the item from the cart
+    :param request: 
+    :param item_id: 
+    :return: HttpResponse
+    """
+
+    if request.user.is_anonymous:
+        if 'cart' in request.session:
+            data = json.loads(request.session['cart'])
+            data['items'].remove(int(item_id))
+
+            items = []
+            total = 0
+            for item_id in data['items']:
+                item = Item.objects.get(id=item_id)
+                items.append(item)
+                total += item.price
+
+            request.session['cart'] = json.dumps(data)
+            request.session['count_items'] = len(data['items'])
+            return render(request, 'cart/cart_detail.html',
+                          {'items': items, 'total': total})
+        else:
+            return HttpResponseRedirect(reverse_lazy('item_list'))
+    else:
+        try:
+            cart = Cart.objects.get(user=request.user, active=True)
+        except Cart.DoesNotExist:
+            return HttpResponseRedirect(reverse_lazy('item_list'))
+
+        item = Item.objects.get(id=item_id)
+        cart.items.remove(item)
+        cart.set_total()
+        cart.save()
+
+        request.session['count_items'] = cart.items.count()
+
+        return render(request, 'cart/cart_payment.html', {'cart': cart})
+
+
 @receiver(user_logged_in)
 def post_login(user, request, **kwargs):
     """ View to create cart once logged
