@@ -89,3 +89,21 @@ def cart_detail(request):
                       {'items': items, 'total': total})
 
 
+def pay_shopping_cart(request):
+    """ Preview the payment of the shopping cart
+
+    if the user is not logged in, it redirects to login.
+    :param request: 
+    :return: HttpResponse
+    """
+
+    if request.user.is_anonymous:
+        request.session['pay'] = True
+        return HttpResponseRedirect(reverse_lazy('login'))
+    else:
+        try:
+            cart = Cart.objects.get(user=request.user, active=True)
+        except Cart.DoesNotExist:
+            return HttpResponseRedirect(reverse_lazy('item_list'))
+
+        return render(request, 'cart/cart_payment.html', {'cart': cart})

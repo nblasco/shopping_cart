@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <form method="post" action="{% url 'login' %}">
+    {% csrf_token %}
+    <div class="mdl-grid">
+        <div class="mdl-card card-login mdl-shadow--2dp">
+          <div class="mdl-card__title">
+              Iniciar Sesión
+          </div>
+            <div class="mdl-card__subtitle-text">
+
+                    <div class="mdl-grid">
+                        <div class="mdl-cell mdl-cell--1-col">
+                            <i class="material-icons mdl-color-text--blue">person</i>
+                        </div>
+                        <div class="mdl-cell mdl-cell--10-col">
+                            {{ form.username }}
+                        </div>
+                    </div>
+                    <div class="mdl-grid">
+                        <div class="mdl-cell mdl-cell--1-col">
+                            <i class="material-icons mdl-color-text--blue">https</i>
+                        </div>
+                        <div class="mdl-cell mdl-cell--10-col">
+                            {{ form.password }}
+                        </div>
+                    </div>
+
+            </div>
+          <div class="mdl-card__actions mdl-card--border">
+            <button type=submit class="mdl-button mdl-js-button mdl-button--primary">
+              Enviar
+            </button>
+          </div>
+        </div>
+        </div>
+    </form>
+
+
+
+{% endblock %}
