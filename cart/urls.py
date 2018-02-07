@@ -13,4 +13,9 @@ urlpatterns = [
         view=views.add_item_cart,
         name='item_add'
     ),
+    url(
+        regex=r'^cart/$',
+        view=views.cart_detail,
+        name='cart_detail'
+    ),
 ]

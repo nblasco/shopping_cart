@@ -54,3 +54,38 @@ def add_item_cart(request, item_id):
     return render(request,
                   'cart/item_list.html',
                   {'info': True, 'item_list': items})
+
+
+def cart_detail(request):
+    """ This view show all items from chopping cart 
+
+    Show the courses added to the cart regardless of whether the user
+    is logged in or is anonymous
+    :param request: 
+    :return: HttpResponse
+    """
+
+    if request.user.is_anonymous:
+        items = []
+        total = 0
+        if 'cart' in request.session:
+            data = json.loads(request.session['cart'])
+            for item_id in data['items']:
+                item = Item.objects.get(pk=item_id)
+                items.append(item)
+                total += item.price
+        return render(request, 'cart/cart_detail.html',
+                      {'items': items, 'total': total})
+    else:
+        try:
+            cart = Cart.objects.get(user=request.user, active=True)
+        except Cart.DoesNotExist:
+            return render(request, 'cart/cart_detail.html',
+                          {'items': [], 'total': 0})
+
+        items = cart.items.all()
+        total = cart.total
+        return render(request, 'cart/cart_detail.html',
+                      {'items': items, 'total': total})
+
+

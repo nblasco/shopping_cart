@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h4> Tu carrito de compra</h4>
+    <div class="mdl-grid cart">
+        <div class="mdl-cell mdl-cell--6-col">
+            <div class="mdl-card mdl-shadow--2dp">
+                <div class="mdl-card__title">Cursos Agregados</div>
+                <div class="mdl-card__subtitle-text">
+                    <ul class="mdl-list">
+                        {% for item in items %}
+                          <li class="mdl-list__item mdl-list__item--two-line">
+                            <span class="mdl-list__item-primary-content">
+                              <img class="mdl-list__item-avatar" src="{{ item.image.url }}"></img>
+                              <span class="cart-item-name">{{ item.name }}</span>
+                              <span class="mdl-list__item-sub-title cart-item-price mdl-color-text--primary">$ {{ item.price }}</span>
+                            </span>
+                            <span class="mdl-list__item-secondary-content">
+                              <a class="mdl-list__item-secondary-action" href="/delete/{{ item.id }}"><i class="material-icons">close</i></a>
+                            </span>
+                          </li>
+                        {% endfor %}
+                    </ul>
+
+                </div>
+            </div>
+
+
+        </div>
+        <div class="mdl-cell mdl-cell--6-col">
+            <div class="mdl-card mdl-shadow--2dp">
+                <div class="mdl-card__title">$ {{ total }}</div>
+                <div class="mdl-card__actions mdl-card--border">
+                    <a href="/cart/pay/" class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect">
+                      Pagar Ahora
+                    </a>
+                  </div>
+            </div>
+        </div>
+
+    </div>
+
+{% endblock %}
