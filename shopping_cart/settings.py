@@ -146,7 +146,7 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
 
 # Urls Redirect
-LOGIN_REDIRECT_URL = '/cart/'
+LOGIN_REDIRECT_URL = '/cart/pay/'
 LOGOUT_REDIRECT_URL = '/'
 
 
