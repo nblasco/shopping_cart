@@ -70,7 +70,7 @@ ROOT_URLCONF = 'shopping_cart.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'templates')],
+        'DIRS': [os.path.join(BASE_DIR, 'shopping_cart/templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -140,5 +140,9 @@ STATICFILES_FINDERS = (
 STATICFILES_DIRS = (
     str(ROOT_DIR.path('static')),
 )
+
+# Media Files
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_URL = '/media/'
 
 

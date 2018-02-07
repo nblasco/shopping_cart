@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+    <div class="mdl-grid item-list">
+        {% for item in item_list %}
+            <div class="mdl-cell mdl-cell--4-col">
+                <div class="mdl-card mdl-shadow--2dp">
+                    <figure class="mdl-card__media">
+                        <img src="{{ item.image.url }}" alt="" />
+                    </figure>
+                  <div class="mdl-card__title">
+                      {{ item.name }}
+                  </div>
+                    <div class="mdl-card__subtitle-text">
+                        <div class="mdl-grid">
+                            <div class="mdl-cell mdl-cell--6-col col1">
+                                {{ item.get_category_display }}
+                            </div>
+                            <div class="mdl-cell mdl-cell--6-col col2">
+                                {{ item.get_level_display }}
+                            </div>
+                        </div>
+                    </div>
+                  <div class="mdl-card__actions mdl-card--border">
+                    <a href="/add/{{ item.id }}" class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect">
+                      $ {{ item.price }}
+                    </a>
+                  </div>
+                </div>
+            </div>
+        {% endfor %}
+
+    </div>
+
+
+    {% if info %}
+        <div class="alert alert-primary" role="alert">
+          Curso agregado exitosamente al carrito de compras.
+        </div>
+    {% endif %}
+{% endblock %}

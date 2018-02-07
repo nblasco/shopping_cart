@@ -1,0 +1,142 @@
+/*********************************
+    Style Body
+*********************************/
+html,body{
+    margin: 0;
+    padding:0;
+    width: 100%;
+    height: 100%;
+    min-height: 100%;
+    overflow-y: auto;
+}
+
+
+/*********************************
+    Style Container
+*********************************/
+.page-content{
+    width: 100%;
+    padding-top: 10px;
+    min-height: 99%;
+    overflow-y: auto;
+
+}
+.mdl-layout{
+    align-items: center;
+    justify-content: center;
+}
+
+.mdl-layout__content{
+
+}
+/*********************************
+    Style Navbar
+*********************************/
+.mdl-layout__header{
+    background: #F5F5F5;
+}
+.mdl-layout-title a{
+    text-decoration: none;
+    color:#2196F3;
+}
+
+
+/*********************************
+    Style Cards
+*********************************/
+.mdl-grid{
+    margin: 0 auto;
+
+}
+.item-list .mdl-card__actions{
+    text-align: right;
+}
+.item-list .mdl-card__title{
+    min-height: 90px;
+}
+.item-list .mdl-card__subtitle-text .mdl-grid{
+    padding: 0px;
+}
+
+.item-list .col1{
+    float: left;
+    width:35%;
+    text-align:left;
+}
+
+.item-list .col2{
+    float: right;
+    width:55%;
+    text-align: right;
+}
+figure{
+    margin: 0px;
+}
+
+.item-list img{
+    width: 340px;
+    height: 225px;
+}
+
+/*********************************
+    Login
+*********************************/
+.card-login .mdl-card__subtitle-text{
+    padding: 10px;
+    align-items: center;
+    justify-content: center;
+
+}
+
+.card-login input{
+    margin: 5px 0px;
+    width: 100%;
+}
+
+.card-login i{
+    padding: 3px 0px;
+    font-size: 25px;
+
+}
+.card-login .mdl-card__subtitle-text .mdl-grid{
+    margin: 0px;
+}
+
+/*********************************
+    Cart
+*********************************/
+
+.cart li{
+    width:100%;
+    min-height: 100px;
+    padding: 5px 0px;
+    border-bottom: 1px solid #eee;
+}
+
+.cart .mdl-card{
+    width: 450px;
+    padding: 5px 10px;
+}
+.cart .cart-item-price{
+    text-align: right;
+    font-size: 16px !important;
+    font-weight: bold !important;
+}
+
+.cart-total{
+    font-size:20px !important;
+    text-align: right;
+    font-weight: bold !important;
+}
+
+.cart-pay a{
+    padding: 10px 0px;
+}
+
+.cart-pay .mdl-card__actions .mdl-card__subtitle-text{
+    margin-top: 10px;
+}
+.cart-pay-method{
+    width: 60px;
+}
+
