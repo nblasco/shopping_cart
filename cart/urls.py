@@ -20,6 +20,16 @@ urlpatterns = [
         name='cart_detail'
     ),
     url(
+        regex=r'^cart/pay/$',
+        view=views.pay_shopping_cart,
+        name='cart_pay'
+    ),
+    url(
+        regex=r'^cart/pay/method/$',
+        view=views.pay_method_cart,
+        name='cart_pay_method'
+    ),
+    url(
         regex=r'^login/$',
         view=auth_views.LoginView.as_view(),
         name='login'
@@ -29,4 +39,5 @@ urlpatterns = [
         view=auth_views.LogoutView.as_view(),
         name='logout'
     ),
+
 ]

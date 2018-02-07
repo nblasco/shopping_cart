@@ -4,6 +4,7 @@ from django.shortcuts import render
 from django.views.generic import ListView
 from django.core.urlresolvers import reverse_lazy
 from django.http import HttpResponseRedirect
+from django.contrib.auth.decorators import login_required
 
 from .models import Item, Cart
 
@@ -107,3 +108,28 @@ def pay_shopping_cart(request):
             return HttpResponseRedirect(reverse_lazy('item_list'))
 
         return render(request, 'cart/cart_payment.html', {'cart': cart})
+
+
+@login_required(login_url='/login/')
+def pay_method_cart(request):
+    """This view allows you to pay for the shopping cart
+
+    Pay the cart through the selected method, in this case, only change the 
+    status of the cart to not active.   
+    :param request: 
+    :return: HttpResponse
+    """
+
+    try:
+        cart = Cart.objects.get(user=request.user, active=True)
+    except Cart.DoesNotExist:
+        return HttpResponseRedirect(reverse_lazy('item_list'))
+    cart.active = False
+    cart.save()
+
+    if 'cart' in request.session:
+        del request.session['cart']
+    if 'count_items' in request.session:
+        del request.session['count_items']
+
+    return HttpResponseRedirect(reverse_lazy('item_list'))
