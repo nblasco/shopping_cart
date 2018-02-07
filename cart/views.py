@@ -5,6 +5,8 @@ from django.views.generic import ListView
 from django.core.urlresolvers import reverse_lazy
 from django.http import HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.signals import user_logged_in, user_logged_out
+from django.dispatch import receiver
 
 from .models import Item, Cart
 
@@ -133,3 +135,47 @@ def pay_method_cart(request):
         del request.session['count_items']
 
     return HttpResponseRedirect(reverse_lazy('item_list'))
+
+
+@receiver(user_logged_in)
+def post_login(user, request, **kwargs):
+    """ View to create cart once logged
+
+    Once the logged-in user signal is received, this view is responsible for
+    seeing if it has a cart in the session, and converting it into an instance 
+    of the database.
+    :param user: 
+    :param request: 
+    :return: HttpResponse
+    """
+    if 'cart' in request.session:
+        cart, created = Cart.objects.get_or_create(user=user, active=True)
+        items_id = json.loads(request.session['cart'])
+        for item_id in items_id['items']:
+            item = Item.objects.get(id=item_id)
+            cart.items.add(item)
+        cart.set_total()
+        cart.save()
+
+        if 'cart' in request.session:
+            del request.session['cart']
+        if 'pay' in request.session:
+            del request.session['pay']
+        return render(request, 'cart/cart_payment.html', {'cart': cart})
+
+
+@receiver(user_logged_out)
+def post_logout(user, **kwargs):
+    """ View to close cart once logged
+
+    Once the user signal not logged in is received, this view is responsible 
+    for closing a cart if it is active
+    :param user: 
+    :return: 
+    """
+    try:
+        cart = Cart.objects.get(user=user, active=True)
+        cart.active = False
+        cart.save()
+    except Cart.DoesNotExist:
+        pass
