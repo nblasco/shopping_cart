@@ -7,7 +7,7 @@ from django.urls import reverse
 from django.contrib.sessions.middleware import SessionMiddleware
 
 from cart.models import Item, Cart
-from cart.views import add_item_cart
+from cart.views import add_item_cart, delete_item_cart
 
 
 def add_middleware_to_request(request, middleware_class):
@@ -33,6 +33,7 @@ class ItemTest(TestCase):
          3.1.- Empty cart
          3.2.- You already have items in the cart, and the current one is not
          3.3.- Try adding an item that is already in the cart
+    4.- Item delete
     """
 
     fixtures = ['cart/fixtures/item.json', 'cart/fixtures/user.json', ]
@@ -165,6 +166,42 @@ class ItemTest(TestCase):
 
         self.assertEqual(count_items, 1)
 
+    def test_anonymous_cart_remove_item(self):
+        """ Test view remove item of cart with user anonymous """
+
+        url = reverse('cart_remove_item', kwargs={'item_id':1})
+
+        session = self.client.session
+        session['count_items'] = 1
+        session['cart'] = '{"items":[1,2]}'
+        session.save()
+        response = self.client.get(url)
+
+        self.assertEqual(len(response.context['items']), 1)
+
+    def test_user_cart_remove_item(self):
+        """ Test view remove item of cart with user login """
+
+        url = reverse('cart_remove_item', kwargs={'item_id': 1})
+
+        self.cart = Cart.objects.create(user=self.user)
+        self.cart.items.add(self.item1)
+        self.cart.items.add(self.item2)
+        self.cart.save()
+
+        request = self.factory.get(url)
+        request.user = self.user
+
+        request = add_middleware_to_request(request, SessionMiddleware)
+        request.session.save()
+
+        response = delete_item_cart(request, 1)
+        cart = Cart.objects.get(id=1)
+
+        self.assertTrue(cart.items.count() == 1)
+        self.assertTrue(not self.item1 in cart.items.all())
+
+
 class CartDetailTest(TestCase):
     """ Test view of detail cart """
 
@@ -179,7 +216,7 @@ class CartDetailTest(TestCase):
         self.factory = RequestFactory()
 
     def test_anonymous_cart_detail(self):
-        """ """
+        """ Test view cart detail when user is anonymous """
 
         session = self.client.session
         session['count_items'] = 1
@@ -193,6 +230,7 @@ class CartDetailTest(TestCase):
         self.assertEqual(response.context['total'], self.item.price)
 
     def test_user_cart_detail(self):
+        """ Test view cart detail when user is login """
 
         self.cart = Cart.objects.create(user=self.user)
         self.cart.items.add(self.item)
